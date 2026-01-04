@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sorry for the loss</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Quicksand&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: rgb(22, 12, 23);
+    overflow: hidden;
+    font-family: 'Quicksand', sans-serif;
+    color: rgb(250, 194, 222);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+  }
+
+  /* Starry background */
+  .stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: -2;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite alternate;
+  }
+  @keyframes twinkle { 0% { opacity: 0.2; } 100% { opacity: 1; } }
+
+  .scene {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    z-index: 1;
+  }
+  .active { display: flex; }
+
+  .teddy { width: 100px; position: relative; margin: 20px 0; transition: transform 1s ease; }
+  .walk { animation: walkAcross 4s forwards; }
+  @keyframes walkAcross { 0% { transform: translateX(-150px); } 100% { transform: translateX(0); } }
+
+  .hug { animation: hugBounce 1s ease forwards; }
+  @keyframes hugBounce { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+  button { padding: 10px 20px; margin-top: 20px; font-size: 16px; cursor: pointer; border: none; border-radius: 6px; background-color: #f1c40f; color: black; font-weight: bold; }
+  button:hover { background-color: #ffe066; }
+
+  .card-container { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+  .card { background: rgb(254, 225, 174); color: rgb(22, 13, 22); width: 300px; height: 450px; padding: 20px; border-radius: 12px; box-shadow: 0 0 10px #000; overflow: hidden; display: flex; justify-content: center; align-items: center; text-align: center; font-family: 'Dancing Script', cursive; }
+  .card img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+
+  .hug-text { font-size: 22px; margin-top: 20px; max-width: 600px; font-family: 'Dancing Script', cursive; }
+
+  .emoji { position: absolute; font-size: 24px; animation: fall 4s linear forwards; z-index: 2; }
+  @keyframes fall { 
+    0% { top: -50px; transform: translateX(0) rotate(0deg); } 
+    25% { transform: translateX(10px) rotate(90deg); } 
+    50% { transform: translateX(-10px) rotate(180deg); } 
+    75% { transform: translateX(5px) rotate(270deg); } 
+    100% { top: 100vh; transform: translateX(0) rotate(360deg); } 
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<!-- Scene 1 -->
+<div class="scene active" id="scene1">
+  <div class="teddy walk"><img src="images/teddy.png" width="150px" alt="Teddy Bear"></div>
+  <div class="story-text" id="text1"></div>
+  <button id="btn1" style="display:none;" onclick="nextScene(2)">Let's Talk</button>
+</div>
+
+<!-- Scene 2 -->
+<div class="scene" id="scene2">
+  <div class="teddy walk"><img src="images/sad.png" width="150px" alt="Teddy Bear"></div>
+  <div class="story-text" id="text2"></div>
+  <button id="btn2" style="display:none;" onclick="nextScene(3)">Next</button>
+</div>
+
+<!-- Scene 3 -->
+<div class="scene" id="scene3">
+  <div class="teddy"><img src="images/bear.png" width="150px" alt="Teddy Bear"></div>
+  <div class="story-text" id="text3"></div>
+  <button id="btn3" style="display:none;" onclick="nextScene(4)">Next</button>
+</div>
+
+<!-- Scene 4 -->
+<div class="scene" id="scene4">
+  <div class="card-container">
+    <div class="card">
+      <p>Dear Mr Mukhwana,<br><br>
+      Life has proven too short before you could show your love for your dad. Time has robbed you and left you with only memories for your heart. But remember a man is truly gone once forgotten and he shall forever keep you in his heart.
+      We are deeply sorry for your loss. We hope you feel comfort and support from everyone around you. Remember the the bond that can't be broken is one of a father and his son that even death can't break it<br><br>
+      — From your Class [3S5]</p>
+    </div>
+    <div class="card">
+      <img src="images/father_son.webp" alt="Father and Son">
+    </div>
+  </div>
+  <button onclick="nextScene(5)">Next</button>
+</div>
+
+<!-- Scene 5 -->
+<div class="scene" id="scene5">
+  <div class="teddy hug" style="position: relative;">
+    <img src="images/hug.png" alt="White Teddy Bear" style="width:150px;">
+    <div style="position: absolute; top:20px; left:50%; transform:translateX(-50%); font-size:40px;">❤️</div>
+  </div>
+  <div class="story-text" id="text5"></div>
+  <button onclick="receiveHug()">Receive Hug 💛</button>
+</div>
+
+<script>
+const starsContainer = document.getElementById('stars');
+for(let i=0;i<100;i++){
+  const star=document.createElement('div');
+  star.classList.add('star');
+  star.style.top=Math.random()*100+'%';
+  star.style.left=Math.random()*100+'%';
+  star.style.animationDuration=1+Math.random()*2+'s';
+  starsContainer.appendChild(star);
+}
+
+// Line-by-line text for storybook effect
+const scenesText = {
+  text1:["I've been thinking a lot..."],
+  text2:["Something has been in my heart for some time..."],
+  text3:[
+    "I'm sad I never got the chance to tell you that I love you or said thank you for raising me.",
+    "Sadly, time robbed me from you and now all is left is memories with you and the good times we had.",
+    "-you."
+  ],
+  text5:[
+    "I may not be able to bring him back to life, but I can remind you that he still loves you,",
+    "and you have other people who still love you just the way you are.",
+    "and that a father and a son is not related by blood but by a friendship that is out of this world."
+  ]
+};
+
+function showLines(textId, buttonId){
+  const container=document.getElementById(textId);
+  const lines=scenesText[textId];
+  container.innerHTML="";
+  let i=0;
+  function showNextLine(){
+    if(i<lines.length){
+      const p=document.createElement('p');
+      p.style.fontFamily="'Dancing Script', cursive";
+      p.style.fontSize="24px";
+      p.textContent=lines[i];
+      container.appendChild(p);
+      i++;
+      setTimeout(showNextLine,1200);
+    }else{
+      if(buttonId) document.getElementById(buttonId).style.display='inline-block';
+    }
+  }
+  showNextLine();
+}
+
+// Initialize first scene
+document.addEventListener("DOMContentLoaded",()=>{ showLines("text1","btn1"); });
+
+function nextScene(sceneNumber){
+  const current=document.querySelector('.scene.active');
+  current.classList.remove('active');
+  const next=document.getElementById('scene'+sceneNumber);
+  if(next) next.classList.add('active');
+
+  const teddy=next.querySelector('.teddy');
+  if(teddy){ teddy.classList.remove('walk'); void teddy.offsetWidth; teddy.classList.add('walk'); }
+
+  if(sceneNumber===2) showLines("text2","btn2");
+  if(sceneNumber===3) showLines("text3","btn3");
+  if(sceneNumber===5) showLines("text5","");
+}
+
+function receiveHug(){
+  const emojis=['💛','😊','🌟','💖','😄','✨'];
+  for(let i=0;i<40;i++){
+    const emoji=document.createElement('div');
+    emoji.classList.add('emoji');
+    emoji.style.left=Math.random()*100+'vw';
+    emoji.style.fontSize=20+Math.random()*25+'px';
+    emoji.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    document.body.appendChild(emoji);
+    setTimeout(()=>{ emoji.remove(); },4000);
+  }
+}
+</script>
+</body>
+</html>
